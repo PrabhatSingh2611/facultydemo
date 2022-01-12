@@ -1,3 +1,4 @@
+
 #Faculties Spring Application
 
 This is the project to fetch data from faculties database
