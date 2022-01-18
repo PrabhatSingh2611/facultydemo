@@ -1,25 +1,32 @@
 package com.facultiesProject.faculties.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "Department")
+@Table(name = "department")
 public class Department {
+    @Id
+    @Column(name = "deptid", nullable = false)
     private Integer deptId;
+    @Column(name = "deptname", nullable = false)
     private String deptName;
 
+
+    public Department(){
+
+    }
     public Department(Integer deptId, String deptName) {
         this.deptId = deptId;
         this.deptName = deptName;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public Integer getDeptId() {
         return deptId;
     }
 
-    @Column(name = "DeptName", nullable = false)
+
     public String getDeptName() {
         return deptName;
     }
@@ -31,6 +38,7 @@ public class Department {
     public void setDeptName(String deptName) {
         this.deptName = deptName;
     }
+
 
     @Override
     public String toString() {

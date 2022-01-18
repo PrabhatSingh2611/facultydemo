@@ -2,6 +2,7 @@ package com.facultiesProject.faculties.controllers;
 
 import com.facultiesProject.faculties.Exception.ResourceNotFoundException;
 import com.facultiesProject.faculties.model.Students;
+import com.facultiesProject.faculties.model.Subject;
 import com.facultiesProject.faculties.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-//@RestController
+
 @Controller
 @RequestMapping("/api/v1")
 public class StudentController {
@@ -23,7 +24,10 @@ public class StudentController {
     private StudentRepository studentRepository;
 
     /*
-    This method is for retriving all the list of students
+    -----------select operation------------
+     */
+    /*
+    This method is for retrieving all the list of students
     from database.
     input : Model
     return : index.html
@@ -34,12 +38,19 @@ public class StudentController {
      return "index";
    }
 
+   /*
+   This is method for fetching students by their id.
+    */
+
     @GetMapping("/students/{id}")
     public ResponseEntity<Students> getStudentById(@PathVariable(value = "id") Integer id)
     {
-        Students student = studentRepository.findById(id).orElse(new Students(0,"none","none",0,0,false));
+        Students student = studentRepository.findById(id).orElse(new Students(0,"none","none",0,false));
         return ResponseEntity.ok().body(student);
     }
+    /*
+    -------------------------- Insert operation -------------
+     */
 
   /*
     Adding student in the database by post
@@ -59,6 +70,14 @@ public class StudentController {
         return "redirect:list";
     }
 
+    /*
+     ---------------- Delete operation ---------------------
+     */
+    /*
+      In index.html the delete part will handle by this method
+      Param : Id of student
+      return : Updated index.html
+     */
 
     @GetMapping("delete/{id}")
     public String deleteStudent(@PathVariable(value = "id") int id,Model model)
@@ -68,40 +87,43 @@ public class StudentController {
         return "index";
     }
 
+    @DeleteMapping("delete1/{id}")
+    public String deleteStudent1(@PathVariable(value = "id") int id,Model model)
+    {
+        studentRepository.deleteById(id);
+        model.addAttribute("students", studentRepository.findAll());
+        return "index";
+    }
+
+    /*
+     ----------------- Modify operation ----------------------
+     */
+    /*
+       In index.html edit button will map with this function
+       and in return it will go to update-student.html
+       with student object
+     */
     @GetMapping("edit/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Students student = studentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid student Id:" + id));
-        System.out.println(student);
         model.addAttribute("student", student);
         return "update-student";
     }
 
-/*
-   @PutMapping ("students/{id}")
-    public  String updateEmployee (@PathVariable(value = "id")Integer studentId,
-                                                          @RequestBody Students studentsDetails ) throws ResourceNotFoundException
-    {
-        Students students = studentRepository.findById(studentId)
-                .orElseThrow(() ->  new ResourceNotFoundException( " Employee not found for this id :: "  + studentId));
-        students.setAge(studentsDetails.getAge());
-        students.setGender(studentsDetails.getGender());
-        students.setGroupId(studentsDetails.getGroupId());
-        students.setName(studentsDetails.getName());
-        students.setSurname(studentsDetails.getSurname());
-        System.out.println(students);
-        final  Students updatedStudent = studentRepository.save(students);
-        return "index";
-    }
+  /*
+   It will edit student in update-student.html
+   and save into database
+   return the index page
    */
+   @PutMapping ("update/{id}")
+   public String updateStudent(@PathVariable("id") long id,Students student,
+                               Model model) {
+       studentRepository.save(student);
+       model.addAttribute("students", studentRepository.findAll());
+       return "index";
+   }
 
-    @PostMapping("update/{id}")
-    public String updateStudent(@PathVariable("id") long id,Students student,
-                                Model model) {
-        studentRepository.save(student);
-        System.out.println(student);
-        model.addAttribute("students", studentRepository.findAll());
-        return "index";
-    }
+
 
 }

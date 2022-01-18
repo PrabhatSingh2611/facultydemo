@@ -40,10 +40,20 @@
                                 <td th:text="${student.name}"></td>
                                 <td th:text="${student.surname}"></td>
                                 <td th:text="${student.age}"></td>
-                                <td th:text="${student.GroupId}"></td>
+                                <td>
+                                    <span th:each= "group : ${student.group}" >
+                                    <span th:text="${group.groupId}" />
+                                    </span>
+
+                            </td>
                                 <td th:text="${student.Gender}"></td>
-                                <td><a th:href="@{/api/v1/edit/{id}(id=${student.id})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a></td>
-                                <td><a th:href="@{/api/v1/delete/{id}(id=${student.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
+                                <td><a th:href="@{/api/v1/edit/{id}(id=${student.id})}"  class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a></td>
+                                <td><a th:href="@{/api/v1/delete1/{id}(id=${student.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
+                                </td><td>
+                                <form action="#" th:action="@{/api/v1/delete1/{id}(id=${student.id})}" th:method="delete">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
                             </tr>
                             </tbody>
                         </table>
